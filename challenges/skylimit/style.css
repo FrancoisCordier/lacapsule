@@ -1,0 +1,49 @@
+body {
+  margin: 0px;
+  background-color: lightgray;
+}
+
+p,
+h2,
+h1 {
+  font-family: "Open Sans", sans-serif;
+  font-style: bold;
+}
+
+h1 {
+  margin: 0px;
+  color: white;
+}
+
+.bg {
+  background: url(assets/background.jpg) no-repeat center center fixed;
+  height: 70vh;
+  background-size: cover;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+  margin: 20px;
+}
+
+.row {
+  display: flex;
+  background-color: white;
+  width: 50vw;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-row {
+  height: 120px;
+  width: 150px;
+  margin: 15px;
+}
+
+.article-title,
+.article-content {
+  margin: 10px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="container" id="p1">
+      <h1>Joueur 1</h1>
+      <div>
+        <input type="text" id="inputp1"/>
+        <button type="button" id="btn-val-p1">Valider</button>
+      </div>
+    </section>
+    <section class="container hidden" id="p2">
+      <h1>Joueur 2</h1>
+      <div>
+        <input type="text" id="inputp2"/>
+        <button type="button" id="btn-val-p2">Valider</button>
+        <p>Points : <span id="points"></span></p>
+      </div>
+    </section>
+    <section class="container hidden" id="gamezone">
+    </section>
+    <section id="victory" class="container hidden"> Gagné !</section>
+    <section id="defeat" class="container hidden">Perdu !</section>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>

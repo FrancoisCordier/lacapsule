@@ -1,0 +1,28 @@
+.mycards {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.lastplay {
+  display: flex;
+  justify-content: center;
+  height: 50vh;
+  margin-top: 50px;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  height: 300px;
+  width: 200px;
+  border-radius: 10%;
+}
+
+.cardnumber,
+#lastcardnumber {
+  font-size: 100px;
+  color: white;
+}
