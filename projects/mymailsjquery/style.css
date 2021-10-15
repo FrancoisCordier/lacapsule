@@ -1,0 +1,76 @@
+body {
+  background-color: #f5f6fa;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+  background-color: #ffffff;
+  border: 1px solid #dadada;
+  padding: 20px;
+  margin-bottom: -1px;
+}
+
+.trash {
+  align-self: center;
+  width: 15px;
+  height: 15px;
+  margin: 10px;
+  padding: 0px;
+}
+
+.trash:hover {
+  cursor: pointer;
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 60px;
+  align-self: center;
+  margin: 10px;
+}
+
+.message,
+.name {
+  margin: 10px;
+}
+
+#new-message {
+  width: 90%;
+  margin-right: 10px;
+}
+
+#btn-add {
+  align-self: flex-end;
+  color: #3498db;
+  background-color: white;
+  border-color: #3498db;
+  border-radius: 10%;
+  border-style: solid;
+}
+
+#btn-add:hover {
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+}
+
+#btn-add:focus {
+  outline: solid #3498db 2px;
+}
+
+p,
+h6 {
+  font-family: "Open Sans", sans-serif;
+  font-style: bold;
+  font-size: 14px;
+}
