@@ -9,8 +9,7 @@ $("#search").on("keyup", function () {
   let searchValue = $(this).val().toLowerCase();
   $("#messagescontainer h6").filter(function () {
     $(this)
-      .parent()
-      .parent()
+      .parentsUntil(".container")
       .toggle($(this).text().toLowerCase().indexOf(searchValue) >= 0);
   });
 });
