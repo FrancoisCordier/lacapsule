@@ -5,6 +5,16 @@ $("body").on("click", ".trash", function () {
   $("#countmessages").text($(".message").length);
 });
 
+$("#search").on("keyup", function () {
+  let searchValue = $(this).val().toLowerCase();
+  $("#messagescontainer h6").filter(function () {
+    $(this)
+      .parent()
+      .parent()
+      .toggle($(this).text().toLowerCase().indexOf(searchValue) >= 0);
+  });
+});
+
 $("#btn-add").click(function () {
   let rowTemplate = `<div class='row'>
     <img src='assets/avatar-1.jpg' class='avatar' />
