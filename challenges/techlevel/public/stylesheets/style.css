@@ -1,0 +1,12 @@
+body {
+  background: rgb(128, 76, 164);
+  background: linear-gradient(
+    90deg,
+    rgba(128, 76, 164, 1) 42%,
+    rgba(38, 133, 163, 1) 76%
+  );
+}
+
+.img-small {
+  width: 50px;
+}
