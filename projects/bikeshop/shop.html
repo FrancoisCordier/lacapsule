@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Darker+Grotesque&display=swap"
+      rel="stylesheet"
+    />
+    <title>BikeShop - Shop</title>
+  </head>
+
+  <body>
+    <!-- header -->
+    <nav class="navbar navbar-light bg-dark">
+      <a class="navbar" href="index.html">
+        <img
+          src="img/bike-logo.svg"
+          width="50"
+          height="50"
+          class="logo"
+          alt=""
+        />
+        The Bike Shop Experience
+      </a>
+    </nav>
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb alert alert-secondary mt-3">
+          <li class="breadcrumb-item">
+            <a class="link-primary fs-5" href="index.html">Shop</a>
+          </li>
+          <li class="breadcrumb-item active fs-5" aria-current="page">Cart</li>
+        </ol>
+      </nav>
+      <h1>Basket</h1>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Picture</th>
+            <th scope="col">Model</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Suppr</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td><img src="img/bike-1.jpg" class="basket-img" /></td>
+            <td>BIKO45</td>
+            <td><input type="number" value="2" /> <a href="#" class="btn btn-primary"><i class="fas fa-sync"></i></a></i></td>
+            <td>679€</td>
+            <td>1358€</td>
+            <td><a href="#" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td><img src="img/bike-2.jpg" class="basket-img" /></td>
+            <td>BIKO45</td>
+            <td><input type="number" value="1" /> <a href="#" class="btn btn-primary"><i class="fas fa-sync"></i></a></i></td>
+            <td>799€</td>
+            <td>799€</td>
+            <td><a href="#" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td><img src="img/bike-3.jpg" class="basket-img" /></td>
+            <td>BIKO45</td>
+            <td><input type="number" value="1" /> <a href="#" class="btn btn-primary"><i class="fas fa-sync"></i></a></i></td>
+            <td>899€</td>
+            <td>899€</td>
+            <td><a href="#" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- scripts -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/e7fc5f269c.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -8,9 +8,15 @@ $("body").on("click", ".trash", function () {
 $("#search").on("keyup", function () {
   let searchValue = $(this).val().toLowerCase();
   $("#messagescontainer h6").filter(function () {
+    console.log(
+      "Nom: ",
+      $(this).text(),
+      "Index: ",
+      $(this).text().toLowerCase().indexOf(searchValue)
+    );
     $(this)
       .parentsUntil(".container")
-      .toggle($(this).text().toLowerCase().indexOf(searchValue) >= 0);
+      .toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
   });
 });
 

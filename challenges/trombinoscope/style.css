@@ -1,0 +1,45 @@
+body {
+  background-color: #ecf0f1;
+}
+
+a {
+  background-color: #ecf0f1;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.nav {
+  border-bottom: 1px solid black;
+  width: 80%;
+}
+
+.active {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  margin-bottom: -1px;
+}
+
+.item {
+  padding: 10px;
+}
+
+.card {
+  border: 1px solid black;
+  padding: 10px;
+  text-align: center;
+  margin: 5px;
+}
