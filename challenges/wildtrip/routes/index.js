@@ -36,4 +36,10 @@ router.get("/card", function (req, res) {
   res.render("card", { travel, cityIndex });
 });
 
+router.get("/delete", function (req, res) {
+  const cityIndex = req.query.cityIndex;
+  travel.splice(cityIndex, 1);
+  res.render("index");
+});
+
 module.exports = router;
