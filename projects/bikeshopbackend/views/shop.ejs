@@ -61,13 +61,19 @@
           totalCart += dataCartBike[i].price * dataCartBike[i].quantity;
         %>
           <tr>
-            <th scope="row"><%= i+1 %></th>
+            <th scope="row"><%= i %></th>
             <td><img src="<%= dataCartBike[i].img %>" class="basket-img" /></td>
             <td><%= dataCartBike[i].name %></td>
-            <td><input type="number" value="<%= dataCartBike[i].quantity %>" /> <a href="#" class="btn btn-primary"><i class="fas fa-sync"></i></a></i></td>
+            <td>
+              <form action="/update-shop" method="post">
+                <input type="number" name="quantity" value="<%= dataCartBike[i].quantity %>" />
+                <input type="hidden" name="index" value="<%= i %>" />
+                <button type="submit" class="btn btn-primary"><i class="fas fa-sync"></i></button>
+              </form>
+            </td>
             <td><%= dataCartBike[i].price %>€</td>
             <td><%= dataCartBike[i].price * dataCartBike[i].quantity %>€</td>
-            <td><a href="#" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
+            <td><a href="/delete-shop?model=<%= dataCartBike[i].name%>" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
           </tr>
         <% } %>
         <tfoot>

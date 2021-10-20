@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Search Artist</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <div>
+    <form action="/search" method="post">
+      <input type="text" name="search" />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <div>
+   <p><%= messageContent %></p>
+   <ul>
+     <% for (music of favoriteMusics) { %>
+      <li><%= music %></li>
+      <% } %>
+   </ul>
+  </ul>
+  </div>
+</body>
+
+</html>

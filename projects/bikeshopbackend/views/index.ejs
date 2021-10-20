@@ -34,6 +34,16 @@
         />
         The Bike Shop Experience
       </a>
+      <a href="/shop" type="button" class="btn btn-primary">
+        <i class="fas fa-shopping-cart"></i> Cart 
+        <span class="badge bg-secondary">
+          <% let totalQuantity = 0;
+          for (item of dataCartBike) {
+            totalQuantity += item.quantity;
+          } %>
+          <%= totalQuantity %>
+        </span>
+      </a>
     </nav>
     <div id="picture-header"></div>
     <!-- BIKES SECTION: initializing of the grid here -->
@@ -48,7 +58,7 @@
               <h5 class="card-title"><%= dataBike[i].name %></h5>
               <p class="card-text">
                 <%= dataBike[i].price %>€
-                <a href="#" class="btn btn-primary">Buy</a>
+                <a href="/buy?model=<%= dataBike[i].name %>" class="btn btn-primary">Buy</a>
               </p>
             </div>
           </div>

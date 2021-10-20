@@ -1,0 +1,11 @@
+body {
+  background-color: #495057;
+}
+
+.navbar {
+  border-radius: 0.5rem;
+}
+
+.maxheight {
+  height: 100vh;
+}
