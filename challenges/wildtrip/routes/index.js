@@ -39,7 +39,24 @@ router.get("/card", function (req, res) {
 router.get("/delete", function (req, res) {
   const cityIndex = req.query.cityIndex;
   travel.splice(cityIndex, 1);
-  res.render("index");
+  res.render("index", { travel });
+});
+
+router.get("/new", function (req, res) {
+  res.render("new", { travel });
+});
+
+router.post("/add", function (req, res) {
+  const tripName = req.body.tripName;
+  const tripDescription = req.body.tripDescription;
+
+  travel.push({
+    name: tripName,
+    image: "images/photo1.jpg",
+    description: tripDescription,
+  });
+
+  res.render("trips", { travel });
 });
 
 module.exports = router;
