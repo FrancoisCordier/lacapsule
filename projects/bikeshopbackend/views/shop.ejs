@@ -85,10 +85,15 @@
           <td></td>
           <td class="fs-5">Total</td>
           <td class="fs-5"><%= totalCart %>€</td>
-          <td></td>
+          <td>
+            <form action="/create-checkout-session" method="POST">
+              <button type="submit" class="btn btn-primary" id="checkout-button">Checkout</button>
+            </form>
+          </td>
         </tfoot>
         </tbody>
       </table>
+      
       <% } else { %>
         <h2>Votre panier est vide !</h2>
         <% } %>

@@ -1,5 +1,10 @@
+const stripe = require("stripe")(
+  "sk_test_51JnJugKvErLmbSLAbijVE1VS0JpHapzvZm5W9N5PQ9XrlesoUFgWlne2rI6JhFXa6tAZRoKcLN8jKwskq7odiuLy00J67RrcqJ"
+);
 const express = require("express");
 const router = express.Router();
+
+const YOUR_DOMAIN = "http://localhost:3000";
 
 const dataBike = [
   { name: "BIKO45", price: 679, img: "images/bike-1.jpg" },
@@ -63,4 +68,42 @@ router.post("/update-shop", function (req, res) {
 
   res.render("shop", { dataCartBike: req.session.dataCartBike });
 });
+
+router.post("/create-checkout-session", async (req, res) => {
+  const myCart = req.session.dataCartBike;
+  const stripeCart = [];
+
+  for (let item of myCart) {
+    stripeCart.push({
+      price_data: {
+        currency: "eur",
+        product_data: {
+          name: item.name,
+        },
+        unit_amount: item.price * 100,
+      },
+      quantity: item.quantity,
+    });
+  }
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: stripeCart,
+    mode: "payment",
+    allow_promotion_codes: true,
+    success_url: `${YOUR_DOMAIN}/success`,
+    cancel_url: `${YOUR_DOMAIN}/cancel`,
+  });
+
+  res.redirect(303, session.url);
+});
+
+router.get("/success", function (req, res) {
+  req.session.dataCartBike = [];
+  res.render("success");
+});
+
+router.get("/cancel", function (req, res) {
+  res.render("shop", { dataCartBike: req.session.dataCartBike });
+});
+
 module.exports = router;
