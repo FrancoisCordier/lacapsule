@@ -31,7 +31,9 @@ router.get("/login", function (req, res) {
 
 router.post("/add-city", function (req, res) {
   const cityName = req.body.cityName;
-  const alreadyExists = cityList.findIndex((el) => el.name === cityName);
+  const alreadyExists = cityList.findIndex(
+    (el) => el.name.toLowerCase() === cityName.toLowerCase()
+  );
   alertDisplay = "d-none";
 
   if (alreadyExists > -1) {
