@@ -7,12 +7,12 @@ const router = express.Router();
 const YOUR_DOMAIN = "http://localhost:3000";
 
 const dataBike = [
-  { name: "BIKO45", price: 679, img: "images/bike-1.jpg" },
-  { name: "ZOOK7", price: 799, img: "images/bike-2.jpg" },
-  { name: "LIKO89", price: 839, img: "images/bike-3.jpg" },
-  { name: "GEWO8", price: 1249, img: "images/bike-4.jpg" },
-  { name: "KIWIT", price: 899, img: "images/bike-5.jpg" },
-  { name: "NASAY", price: 1399, img: "images/bike-6.jpg" },
+  { name: "BIKO45", price: 679, img: "images/bike-1.jpg", mea: true },
+  { name: "ZOOK7", price: 799, img: "images/bike-2.jpg", mea: true },
+  { name: "LIKO89", price: 839, img: "images/bike-3.jpg", mea: true },
+  { name: "GEWO8", price: 1249, img: "images/bike-4.jpg", mea: false },
+  { name: "KIWIT", price: 899, img: "images/bike-5.jpg", mea: false },
+  { name: "NASAY", price: 1399, img: "images/bike-6.jpg", mea: false },
 ];
 
 router.get("/", function (req, res, next) {
@@ -72,6 +72,7 @@ router.post("/update-shop", function (req, res) {
 router.post("/create-checkout-session", async (req, res) => {
   const myCart = req.session.dataCartBike;
   const stripeCart = [];
+  const shippingRates = req.body.shippingRates;
 
   for (let item of myCart) {
     stripeCart.push({
@@ -85,6 +86,18 @@ router.post("/create-checkout-session", async (req, res) => {
       quantity: item.quantity,
     });
   }
+
+  stripeCart.push({
+    price_data: {
+      currency: "eur",
+      product_data: {
+        name: "Frais de port",
+      },
+      unit_amount: shippingRates * 100,
+    },
+    quantity: 1,
+  });
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     line_items: stripeCart,

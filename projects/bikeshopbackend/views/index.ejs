@@ -23,7 +23,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-light bg-dark">
+    <nav class="navbar navbar-light bg-dark p-2">
       <a class="navbar" href="/">
         <img
           src="images/bike-logo.svg"
@@ -51,7 +51,9 @@
       <div class="row row-cols-md-3 row-cols-sm-2 row-cols-1">
       <% for (let i = 0; i < dataBike.length; i++) { %>
         <div class="col">
-          <div class="card">
+          <% if (dataBike[i].mea === true) { %>
+          <div class="card text-white bg-success mb-3">
+            <div class="card-header text-center fs-2">Best Buy !</div>
             <img src=<%= dataBike[i].img%> class="card-img-top"
             alt="..." />
             <div class="card-body text-center">
@@ -62,6 +64,19 @@
               </p>
             </div>
           </div>
+          <% } else {%>
+            <div class="card">
+              <img src=<%= dataBike[i].img%> class="card-img-top"
+              alt="..." />
+              <div class="card-body text-center">
+                <h5 class="card-title"><%= dataBike[i].name %></h5>
+                <p class="card-text">
+                  <%= dataBike[i].price %>€
+                  <a href="/buy?model=<%= dataBike[i].name %>" class="btn btn-primary">Buy</a>
+                </p>
+              </div>
+            </div>
+          <% } %>
         </div>
       <% } %>
       </div>

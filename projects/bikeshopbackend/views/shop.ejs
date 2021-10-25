@@ -20,7 +20,7 @@
 
   <body>
     <!-- header -->
-    <nav class="navbar navbar-light bg-dark">
+    <nav class="navbar navbar-light bg-dark p-2">
       <a class="navbar" href="/">
         <img
           src="images/bike-logo.svg"
@@ -57,10 +57,11 @@
         </thead>
         <tbody>
         <%
-        
+        let shippingRates = 0;
         let totalCart = 0;
         for (let i = 0; i < dataCartBike.length; i++) {
           totalCart += dataCartBike[i].price * dataCartBike[i].quantity;
+          shippingRates += dataCartBike[i].quantity * 30;
         %>
           <tr>
             <th scope="row"><%= i %></th>
@@ -78,22 +79,41 @@
             <td><a href="/delete-shop?model=<%= dataCartBike[i].name%>" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
           </tr>
         <% } %>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="fs-5">Frais de port</td>
+            <td class="fs-5">
+              <% 
+              if (totalCart > 4000) shippingRates = 0;
+              else if (totalCart > 2000) shippingRates /= 2;
+              %>
+              <% if (shippingRates === 0) { %> 
+                Offerts
+              <% } else { %>
+                <%= shippingRates %>€
+              <% } %>
+            </td>
+          </tr>
         <tfoot>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
           <td class="fs-5">Total</td>
-          <td class="fs-5"><%= totalCart %>€</td>
+          <td class="fs-5"><%= totalCart + shippingRates %>€</td>
           <td>
             <form action="/create-checkout-session" method="POST">
               <button type="submit" class="btn btn-primary" id="checkout-button">Checkout</button>
+              <input type="hidden" name="totalCart" value="<%= totalCart %>"/>
+              <input type="hidden" name="shippingRates" value="<%= shippingRates %>">
             </form>
           </td>
         </tfoot>
         </tbody>
       </table>
-      
       <% } else { %>
         <h2>Votre panier est vide !</h2>
         <% } %>
