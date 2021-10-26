@@ -1,28 +1,23 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const router = express.Router();
+const axios = require("axios");
 
-const cityList = [
-  {
-    name: "Paris",
-    weather: "Nuageux",
-    weatherPic: "cloud-sun",
-    tmpMin: 3,
-    tmpMax: 7,
-  },
-  {
-    name: "Lyon",
-    weather: "Ciel dégagé",
-    weatherPic: "sun",
-    tmpMin: 7,
-    tmpMax: 14,
-  },
-];
+const cityList = [];
 
-let alertDisplay = "d-none";
+let alertDisplayExists = "d-none";
+let alertDisplayEmpty = "d-none";
+let alertDisplayNotFound = "d-none";
 
 router.get("/", function (req, res, next) {
-  alertDisplay = "d-none";
-  res.render("weather", { cityList, alertDisplay });
+  alertDisplayExists = "d-none";
+  alertDisplayEmpty = "d-none";
+  alertDisplayNotFound = "d-none";
+  res.render("weather", {
+    cityList,
+    alertDisplayExists,
+    alertDisplayEmpty,
+    alertDisplayNotFound,
+  });
 });
 
 router.get("/login", function (req, res) {
@@ -37,25 +32,80 @@ router.post("/add-city", function (req, res) {
   alertDisplay = "d-none";
 
   if (alreadyExists > -1) {
-    alertDisplay = "";
-  } else
-    cityList.push({
-      name: cityName,
-      weather: "Averses",
-      weatherPic: "cloud-showers-heavy",
-      tmpMin: 1,
-      tmpMax: 6,
+    alertDisplayEmpty = "d-none";
+    alertDisplayNotFound = "d-none";
+    alertDisplayExists = "";
+    res.render("weather", {
+      cityList,
+      alertDisplayEmpty,
+      alertDisplayExists,
+      alertDisplayNotFound,
     });
-  res.render("weather", { cityList, alertDisplay });
+  } else if (cityName.length === 0) {
+    alertDisplayExists = "d-none";
+    alertDisplayNotFound = "d-none";
+    alertDisplayEmpty = "";
+    res.render("weather", {
+      cityList,
+      alertDisplayEmpty,
+      alertDisplayExists,
+      alertDisplayNotFound,
+    });
+  } else {
+    alertDisplayExists = "d-none";
+    alertDisplayEmpty = "d-none";
+    alertDisplayNotFound = "d-none";
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${cityName.toLowerCase()}&appid=fcbe5bcfa5048271a2e9b3aaf5618bba&units=metric&lang=fr`
+      )
+      .then(function (response) {
+        const dataAPI = response.data;
+        return dataAPI;
+      })
+      .catch(function (error) {
+        console.log(error);
+        alertDisplayNotFound = "";
+        res.render("weather", {
+          cityList,
+          alertDisplayExists,
+          alertDisplayEmpty,
+          alertDisplayNotFound,
+        });
+      })
+      .then(function (dataAPI) {
+        cityList.push({
+          name: dataAPI.name,
+          weather: dataAPI.weather[0].description,
+          weatherPic: dataAPI.weather[0].icon,
+          tmpMin: dataAPI.main.temp_min,
+          tmpMax: dataAPI.main.temp_max,
+        });
+        res.render("weather", {
+          cityList,
+          alertDisplayExists,
+          alertDisplayEmpty,
+          alertDisplayNotFound,
+        });
+      });
+  }
 });
 
 router.get("/delete-city", function (req, res) {
+  alertDisplayExists = "d-none";
+  alertDisplayEmpty = "d-none";
+  alertDisplayNotFound = "d-none";
   const cityName = req.query.cityName;
   const cityIndex = cityList.findIndex((el) => el.name === cityName);
 
   cityList.splice(cityIndex, 1);
 
-  res.render("weather", { cityList, alertDisplay });
+  res.render("weather", {
+    cityList,
+    alertDisplayExists,
+    alertDisplayEmpty,
+    alertDisplayNotFound,
+  });
 });
 
 module.exports = router;

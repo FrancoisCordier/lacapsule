@@ -57,11 +57,21 @@
         </thead>
         <tbody>
         <%
-        let shippingRates = 0;
+        
+        let totalQuantity = 0;
+        const shippingModes = [
+          { name: "Normal", value: 0 }, 
+          { name: "Express", value: 0 },
+          { name: "Point relais", value: 0 } 
+        ];
+        
+        for (let item of dataCartBike) {
+          totalQuantity += item.quantity;
+        }
+
         let totalCart = 0;
         for (let i = 0; i < dataCartBike.length; i++) {
           totalCart += dataCartBike[i].price * dataCartBike[i].quantity;
-          shippingRates += dataCartBike[i].quantity * 30;
         %>
           <tr>
             <th scope="row"><%= i %></th>
@@ -84,17 +94,36 @@
             <td></td>
             <td></td>
             <td></td>
-            <td class="fs-5">Frais de port</td>
-            <td class="fs-5">
+            <td class="fs-5 fw-bold">Frais de port</td>
+            <td>
               <% 
-              if (totalCart > 4000) shippingRates = 0;
-              else if (totalCart > 2000) shippingRates /= 2;
+              for (let mode of shippingModes) {
+                if (totalCart > 4000) {
+                  if (mode.name === "Normal") mode.value = 0;
+                  else if (mode.name === "Express") mode.value = 100;
+                  else mode.value = totalQuantity * 20 + 50;
+                } else if (totalCart > 2000) {
+                  if (mode.name === "Normal") mode.value = totalQuantity * 30 / 2;
+                  else if (mode.name === "Express") mode.value = totalQuantity * 30 / 2 + 100;
+                  else mode.value = totalQuantity * 20 + 50;
+                } else if (totalCart <= 2000) {
+                  if (mode.name === "Normal") mode.value = totalQuantity * 30;
+                  else if (mode.name === "Express") mode.value = totalQuantity * 30 + 100;
+                  else mode.value = totalQuantity * 20 + 50;
+                } 
+              }
+              shippingModes.sort((a, b) => a.value - b.value);
+              shippingRates = shippingModes[0].value;
+              console.log(shippingRates);
               %>
-              <% if (shippingRates === 0) { %> 
-                Offerts
-              <% } else { %>
-                <%= shippingRates %>€
-              <% } %>
+              <select id="selectShippingMode">
+                <% for (let mode of shippingModes) { %>
+                  <option value="<%= mode.value %>"><%= mode.name %> - <%= mode.value %>€</option>
+                <% } %>
+              </select>
+            </td>
+            <td class="fs-5">
+             <%= shippingRates %>€
             </td>
           </tr>
         <tfoot>
@@ -102,7 +131,7 @@
           <td></td>
           <td></td>
           <td></td>
-          <td class="fs-5">Total</td>
+          <td class="fs-5 fw-bold">Total</td>
           <td class="fs-5"><%= totalCart + shippingRates %>€</td>
           <td>
             <form action="/create-checkout-session" method="POST">
@@ -119,6 +148,16 @@
         <% } %>
     </div>
     <!-- scripts -->
+    <script>
+      const select = document.getElementById("selectShippingMode");
+      let shippingRates = 0;
+
+      select.addEventListener("change", function() {
+        shippingRates = select.options[select.selectedIndex].value;
+        
+      })
+      
+    </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

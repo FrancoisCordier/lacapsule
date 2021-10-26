@@ -41,10 +41,49 @@
             </div>
           </form>
           <div
-            class="alert alert-danger alert-dismissible <%= alertDisplay %>"
+            class="
+              alert alert-danger alert-dismissible
+              <%=
+              alertDisplayNotFound
+              %>
+            "
+            role="alert"
+          >
+            City not found !
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div
+            class="
+              alert alert-danger alert-dismissible
+              <%=
+              alertDisplayExists
+              %>
+            "
             role="alert"
           >
             City already exists !
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div
+            class="
+              alert alert-danger alert-dismissible
+              <%=
+              alertDisplayEmpty
+              %>
+            "
+            role="alert"
+          >
+            Your request is empty !
             <button
               type="button"
               class="btn-close"
@@ -79,7 +118,9 @@
               <%= city.name %>
               <div>
                 <%= city.weather %>
-                <i class="fas fa-<%= city.weatherPic %>"></i>
+                <img
+                  src="http://openweathermap.org/img/wn/<%= city.weatherPic %>.png"
+                />
                 <span class="badge rounded-pill bg-warning text-dark"
                   ><%= city.tmpMax %>°C</span
                 >
