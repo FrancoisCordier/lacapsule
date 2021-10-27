@@ -99,7 +99,10 @@
         <div class="col"><img src="images/map.png" class="img-fluid" /></div>
         <div class="col">
           <h5 class="text-center p-2">
-            Update Cities <i class="fas fa-sync-alt"></i>
+            Update Cities
+            <a href="/update-data" class="btn btn-warning"
+              ><i class="fas fa-sync-alt"></i
+            ></a>
           </h5>
           <% if (cityList.length === 0) { %>
           <p class="text-center">No cities found</p>
@@ -128,7 +131,7 @@
                   ><%= city.tmpMin %>°C</span
                 >
               </div>
-              <a href="/delete-city?cityName=<%= city.name%>">
+              <a href="/delete-city?cityId=<%= city.id%>">
                 <i class="fas fa-trash-alt"></i
               ></a>
             </li>
