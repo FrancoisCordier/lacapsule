@@ -6,6 +6,8 @@ const citySchema = mongoose.Schema({
   weatherPic: String,
   tmpMin: Number,
   tmpMax: Number,
+  lon: Number,
+  lat: Number,
 });
 
 const cityModel = mongoose.model("cities", citySchema);

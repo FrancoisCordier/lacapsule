@@ -3,8 +3,10 @@ const stripe = require("stripe")(
 );
 const express = require("express");
 const router = express.Router();
+const getShippingMode = require("../helpers/getShippingMode");
+const getTotalCart = require("../helpers/getTotalCart");
 
-const YOUR_DOMAIN = "http://localhost:3000";
+const DOMAIN = "http://localhost:3000";
 
 const dataBike = [
   { name: "BIKO45", price: 679, img: "images/bike-1.jpg", mea: true },
@@ -23,12 +25,22 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/shop", function (req, res, next) {
-  req.session.shippingType = req.session.shippingType
-    ? req.session.shippingType
-    : "Normal";
+  const shippingModes = getShippingMode(req.session.dataCartBike);
+  req.session.shippingSelected = req.session.shippingSelected
+    ? req.session.shippingSelected
+    : shippingModes[0];
+
+  const totalOrder = getTotalCart(
+    req.session.dataCartBike,
+    req.session.shippingSelected
+  );
+
+  //console.log(req.session);
   res.render("shop", {
     dataCartBike: req.session.dataCartBike,
-    shippingType: req.session.shippingType,
+    shippingModes,
+    shippingSelected: req.session.shippingSelected,
+    totalCart: totalOrder.totalCart,
   });
 });
 
@@ -69,22 +81,23 @@ router.get("/delete-shop", function (req, res) {
 router.post("/update-shop", function (req, res) {
   const itemIndex = req.body.index;
   const itemQuantity = req.body.quantity;
-  console.log(req.session);
   req.session.dataCartBike[itemIndex].quantity = Number(itemQuantity);
 
   res.redirect("shop");
 });
 
 router.post("/update-shipping", function (req, res) {
-  req.session.shippingType = req.body.shippingType;
-  console.log(req.session);
+  const shippingModes = getShippingMode(req.session.dataCartBike);
+  req.session.shippingSelected = shippingModes.find(
+    (el) => el.name === req.body.shippingMode
+  );
   res.redirect("shop");
 });
 
 router.post("/create-checkout-session", async (req, res) => {
   const myCart = req.session.dataCartBike;
   const stripeCart = [];
-  const shippingRates = req.body.shippingRates;
+  const shippingRates = req.session.shippingSelected.value;
 
   for (let item of myCart) {
     stripeCart.push({
@@ -115,8 +128,8 @@ router.post("/create-checkout-session", async (req, res) => {
     line_items: stripeCart,
     mode: "payment",
     allow_promotion_codes: true,
-    success_url: `${YOUR_DOMAIN}/success`,
-    cancel_url: `${YOUR_DOMAIN}/cancel`,
+    success_url: `${DOMAIN}/success`,
+    cancel_url: `${DOMAIN}/cancel`,
   });
 
   res.redirect(303, session.url);
@@ -128,7 +141,7 @@ router.get("/success", function (req, res) {
 });
 
 router.get("/cancel", function (req, res) {
-  res.render("shop", { dataCartBike: req.session.dataCartBike });
+  res.redirect("shop");
 });
 
 module.exports = router;
