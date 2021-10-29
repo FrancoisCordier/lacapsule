@@ -17,12 +17,12 @@
     <!-- HEADER -->
     <nav class="header navbar navbar-light bg-dark">
       Weather App
-      <a class="logout" href="./login.html">Deconnexion</a>
+      <a class="logout" href="/logout">Deconnexion</a>
     </nav>
 
     <!-- GRID -->
-
     <div class="container">
+      <h3>Welcome back <%= userName %> !</h3>
       <div class="row row-cols-1 row-cols-lg-2 justify-content-end">
         <div class="col">
           <form action="/add-city" method="post">
@@ -118,7 +118,7 @@
                 p-3
               "
             >
-              <%= city.name %>
+              <%= city.name[0].toUpperCase() + city.name.slice(1) %>
               <div>
                 <%= city.weather %>
                 <img

@@ -23,7 +23,13 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/shop", function (req, res, next) {
-  res.render("shop", { dataCartBike: req.session.dataCartBike });
+  req.session.shippingType = req.session.shippingType
+    ? req.session.shippingType
+    : "Normal";
+  res.render("shop", {
+    dataCartBike: req.session.dataCartBike,
+    shippingType: req.session.shippingType,
+  });
 });
 
 router.get("/buy", function (req, res) {
@@ -47,7 +53,7 @@ router.get("/buy", function (req, res) {
     req.session.dataCartBike[elementFoundIndex].quantity += 1;
   }
 
-  res.render("index", { dataBike, dataCartBike: req.session.dataCartBike });
+  res.redirect("/");
 });
 
 router.get("/delete-shop", function (req, res) {
@@ -57,16 +63,22 @@ router.get("/delete-shop", function (req, res) {
   });
 
   req.session.dataCartBike.splice(modelToDeleteIndex, 1);
-  res.render("shop", { dataCartBike: req.session.dataCartBike });
+  res.redirect("shop");
 });
 
 router.post("/update-shop", function (req, res) {
   const itemIndex = req.body.index;
   const itemQuantity = req.body.quantity;
-
+  console.log(req.session);
   req.session.dataCartBike[itemIndex].quantity = Number(itemQuantity);
 
-  res.render("shop", { dataCartBike: req.session.dataCartBike });
+  res.redirect("shop");
+});
+
+router.post("/update-shipping", function (req, res) {
+  req.session.shippingType = req.body.shippingType;
+  console.log(req.session);
+  res.redirect("shop");
 });
 
 router.post("/create-checkout-session", async (req, res) => {
@@ -111,7 +123,7 @@ router.post("/create-checkout-session", async (req, res) => {
 });
 
 router.get("/success", function (req, res) {
-  req.session.dataCartBike = [];
+  req.session.destroy();
   res.render("success");
 });
 

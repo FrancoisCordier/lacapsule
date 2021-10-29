@@ -28,13 +28,14 @@
           <div class="formArea">
             <h4 class="titleForm">Sign Up</h4>
 
-            <form>
+            <form action="/sign-up" method="post">
               <div class="form-group">
                 <label for="exampleInputUsername">Username</label>
                 <input
                   type="text"
                   class="form-control"
                   placeholder="Enter username"
+                  name="username"
                 />
               </div>
               <div class="form-group">
@@ -44,6 +45,7 @@
                   class="form-control"
                   aria-describedby="emailHelp"
                   placeholder="Enter email"
+                  name="email"
                 />
               </div>
               <div class="form-group">
@@ -52,10 +54,11 @@
                   type="password"
                   class="form-control"
                   placeholder="Enter password"
+                  name="password"
                 />
               </div>
 
-              <button type="submit" class="btn btn-info">Submit</button>
+              <button type="submit" class="btn btn-info">Sign up</button>
             </form>
           </div>
         </div>
@@ -86,7 +89,7 @@
                 />
               </div>
 
-              <button type="submit" class="btn btn-info">Submit</button>
+              <button type="submit" class="btn btn-info">Sign in</button>
             </form>
           </div>
         </div>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-fluid m-3">
+      <form class="row row-cols-lg-auto" action="/filter" method="POST">
+        <div class="col-12">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Category</label
+            >
+            <select class="form-select" id="inputGroupSelect01" name="category">
+              <option value="<%= categories %>" selected>Choose...</option>
+              <% for (let category of categories) { %>
+              <option value="<%= category %>"><%= category %></option>
+              <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupSelect01"
+              >Online</label
+            >
+            <select class="form-select" id="inputGroupSelect01" name="isOnline">
+              <option value="true,false" selected>Choose...</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12">
+          <label for="customRange3" class="form-label">Minimum stock</label>
+          <input
+            type="range"
+            class="form-range"
+            min="<%= Math.min(...stocks) %>"
+            max="<%= Math.max(...stocks) %>"
+            value="<%= Math.min(...stocks) %>"
+            step="1"
+            id="minRange"
+            name="minRange"
+          />
+          <p id="minRangeValueFront"></p>
+        </div>
+        <div class="col-12">
+          <label for="customRange3" class="form-label">Maximum stock</label>
+          <input
+            type="range"
+            class="form-range"
+            min="<%= Math.min(...stocks) %>"
+            max="<%= Math.max(...stocks) %>"
+            value="<%= Math.max(...stocks) %>"
+            step="1"
+            id="maxRange"
+            name="maxRange"
+          />
+          <p id="maxRangeValueFront"></p>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+      </form>
+    </div>
+    <div class="container-fluid">
+      <table class="table table-sm table-responsive table-striped">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Is Online</th>
+            <th scope="col">Category</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let product of products) { %>
+          <tr>
+            <th scope="row"><%= product._id %></th>
+            <td><%= product.name %></td>
+            <td><%= product.stock %></td>
+            <td><%= product.isOnline %></td>
+            <td><%= product.category %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const minSlider = document.getElementById("minRange");
+      const maxSlider = document.getElementById("maxRange");
+      const minValueFront = document.getElementById("minRangeValueFront");
+      const minValueBack = document.getElementById("minRangeValueBack");
+      const maxValueFront = document.getElementById("maxRangeValueFront");
+      const maxValueBack = document.getElementById("maxRangeValueBack");
+
+      minSlider.oninput = function () {
+        minValueFront.textContent = this.value;
+        minValueBack.value = this.value;
+      };
+
+      maxSlider.oninput = function () {
+        maxValueFront.textContent = this.value;
+        maxValueBack.value = this.value;
+      };
+    </script>
+  </body>
+</html>

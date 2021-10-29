@@ -113,17 +113,19 @@
                 } 
               }
               shippingModes.sort((a, b) => a.value - b.value);
-              shippingRates = shippingModes[0].value;
-              console.log(shippingRates);
+              
               %>
-              <select id="selectShippingMode">
+              <form action="/update-shipping" method="post">
+                <select name="shippingType">
                 <% for (let mode of shippingModes) { %>
-                 <option value="<%= mode.value %>"><%= mode.name %> - <%= mode.value %>€</option>
+                 <option value="<%= mode.name %>"><%= mode.name %> - <%= mode.value %></option>
                 <% } %>
-              </select>
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-sync"></i></button>
+              </form>
             </td>
             <td class="fs-5">
-             <%= shippingRates %>€
+             <%= shippingType %>€
             </td>
           </tr>
         <tfoot>
@@ -132,12 +134,12 @@
           <td></td>
           <td></td>
           <td class="fs-5 fw-bold">Total</td>
-          <td class="fs-5"><%= totalCart + shippingRates %>€</td>
+          <td class="fs-5"><%= totalCart + shippingModes.find(el => el.name === shippingType).value %>€</td>
           <td>
             <form action="/create-checkout-session" method="POST">
               <button type="submit" class="btn btn-primary" id="checkout-button">Checkout</button>
               <input type="hidden" name="totalCart" value="<%= totalCart %>"/>
-              <input type="hidden" name="shippingRates" value="<%= shippingRates %>">
+              <input type="hidden" name="shippingRates" value="<%= shippingModes.find(el => el.name === shippingType).value %>">
             </form>
           </td>
         </tfoot>
