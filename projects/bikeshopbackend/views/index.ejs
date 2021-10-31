@@ -23,7 +23,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-light bg-dark p-2">
+    <nav class="navbar navbar-light bg-dark">
       <a class="navbar" href="/">
         <img
           src="images/bike-logo.svg"
@@ -34,9 +34,9 @@
         />
         The Bike Shop Experience
       </a>
-      <a href="/shop" type="button" class="btn btn-primary">
-        <i class="fas fa-shopping-cart"></i> Panier 
-        <span class="badge bg-secondary">
+      <a href="/shop" type="button" class="btn btn-light position-relative me-5">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
           <% let totalQuantity = 0;
           for (item of dataCartBike) {
             totalQuantity += item.quantity;
@@ -52,28 +52,43 @@
       <% for (let i = 0; i < dataBike.length; i++) { %>
         <div class="col">
           <% if (dataBike[i].mea === true) { %>
-          <div class="card text-white bg-success mb-3">
+          <div class="card text-dark bg-warning mb-3">
             <div class="card-header text-center fs-2">Best Buy !</div>
             <img src=<%= dataBike[i].img%> class="card-img-top"
             alt="..." />
             <div class="card-body text-center">
               <h5 class="card-title"><%= dataBike[i].name %></h5>
               <p class="card-text">
-                <%= dataBike[i].price %>€
-                <a href="/buy?model=<%= dataBike[i].name %>" class="btn btn-primary">Buy</a>
+                <%= dataBike[i].price %>€ 
+                <% if (dataBike[i].stock === 0) { %> 
+                  <span class="badge rounded-pill bg-danger">Out of stock</span>
+              </p>
+              <p><a class="btn btn-dark btn-sm disabled">Add to cart</a></p>
+                <% } else { %>
+                  <span class="badge rounded-pill bg-success">In stock (<%= dataBike[i].stock %>)</span>
+              </p>
+                  <p><a href="/buy?model=<%= dataBike[i].name %>" class="btn btn-sm btn-dark">Add to cart</a></p>
+                <% } %>
               </p>
             </div>
           </div>
           <% } else {%>
-            <div class="card">
+            <div class="card text-dark bg-light mb-3">
               <img src=<%= dataBike[i].img%> class="card-img-top"
               alt="..." />
               <div class="card-body text-center">
-                <h5 class="card-title"><%= dataBike[i].name %></h5>
+                <h5 class="card-title"><%= dataBike[i].name %></h5> 
                 <p class="card-text">
-                  <%= dataBike[i].price %>€
-                  <a href="/buy?model=<%= dataBike[i].name %>" class="btn btn-primary">Buy</a>
-                </p>
+                  <%= dataBike[i].price %>€ 
+                  <% if (dataBike[i].stock === 0) { %> 
+                    <span class="badge rounded-pill bg-danger">Out of stock</span>
+                  </p>
+                  <a class="btn btn-sm btn-dark disabled">Add to cart</a>
+                  <% } else { %>
+                    <span class="badge rounded-pill bg-success">In stock (<%= dataBike[i].stock %>)</span>
+                  </p>
+                  <a href="/buy?model=<%= dataBike[i].name %>" class="btn btn-sm btn-dark">Add to cart</a>
+                  <% } %>
               </div>
             </div>
           <% } %>

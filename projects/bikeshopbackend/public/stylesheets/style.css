@@ -1,11 +1,11 @@
-body {
+/* body {
   font-family: "Darker Grotesque", sans-serif;
 }
 
 a,
 a:hover {
   color: white;
-}
+} */
 
 #picture-header {
   background-image: url("../images/bike-background.jpg");
@@ -15,9 +15,10 @@ a:hover {
   margin-bottom: 20px;
 }
 
-.card {
+/* .card {
   margin-bottom: 20px;
-}
+} */
+
 .basket-img {
   width: 170px;
 }

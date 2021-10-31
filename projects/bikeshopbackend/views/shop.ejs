@@ -42,7 +42,7 @@
         </ol>
       </nav>
       <h1>Votre panier</h1>
-      <% if (dataCartBike.length > 0) { %>
+      <% if (dataCartBike.length > 0 ) { %>
       <table class="table table-striped">
         <thead>
           <tr>
@@ -52,7 +52,7 @@
             <th scope="col">Quantity</th>
             <th scope="col">Price</th>
             <th scope="col">Total</th>
-            <th scope="col">Suppr</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -65,14 +65,22 @@
             <td><%= dataCartBike[i].name %></td>
             <td>
               <form action="/update-shop" method="post">
-                <input type="number" name="quantity" value="<%= dataCartBike[i].quantity %>" />
+                <div class="input-group">
+                  <input type="number" name="quantity" value="<%= dataCartBike[i].quantity %>" min="1" max="<%= dataBike[dataBike.findIndex(el => el.name === dataCartBike[i].name)].stock + dataCartBike[i].quantity %>" step="1" />
+                  <button type="submit" class="btn btn-dark"><i class="fas fa-sync"></i></button>
+                </div>
                 <input type="hidden" name="index" value="<%= i %>" />
-                <button type="submit" class="btn btn-primary"><i class="fas fa-sync"></i></button>
+                <input type="hidden" name="model" value="<%= dataCartBike[i].name %>" />
               </form>
             </td>
             <td><%= dataCartBike[i].price %>€</td>
+            <% if (dataCartBike[i].quantity >= 2) { %>
+            <td><s><%= dataCartBike[i].price * dataCartBike[i].quantity %>€</s> <%= dataCartBike[i].price * 0.8 + (dataCartBike[i].quantity - 1) * dataCartBike[i].price %>€ 
+              <span class="badge rounded-pill bg-info text-dark">20% off your first bike</span></td>
+            <% } else { %>
             <td><%= dataCartBike[i].price * dataCartBike[i].quantity %>€</td>
-            <td><a href="/delete-shop?model=<%= dataCartBike[i].name%>" class="btn btn-primary"><i class="fas fa-trash-alt"></i></a></td>
+            <% } %>
+            <td><a href="/delete-shop?model=<%= dataCartBike[i].name%>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
           </tr>
         <% } %>
           <tr>
@@ -80,7 +88,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td class="fs-5 fw-bold">Frais de port</td>
+            <td class="fs-5 fw-bold">Shipping rates</td>
             <td>
               <form id="update-shipping" action="/update-shipping" method="post">
                 <select class="shippingMode form-select" name="shippingMode">
@@ -102,10 +110,14 @@
           <td></td>
           <td></td>
           <td class="fs-5 fw-bold">Total</td>
-          <td class="fs-5"><%= totalCart %>€</td>
+          <% if (hasDiscount) { %>
+          <td class="fs-5"><span><s><%= totalCart + shippingRates %>€</s></span> <%= totalCart - totalDiscount + shippingRates %>€ <span class="badge rounded-pill bg-info text-dark"><%= Math.round(totalDiscount * 100) / 100 %>€ discount</span></td>
+          <% } else { %>
+          <td class="fs-5"><%= totalCart + shippingRates %>€</td>
+          <% } %>
           <td>
             <form action="/create-checkout-session" method="POST">
-              <button type="submit" class="btn btn-primary" id="checkout-button">Checkout</button>
+              <button type="submit" class="btn btn-success" id="checkout-button">Checkout</button>
               <input type="hidden" name="totalCart" value="<%= totalCart %>"/>
             </form>
           </td>
