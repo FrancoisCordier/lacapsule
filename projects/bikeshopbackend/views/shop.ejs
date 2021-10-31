@@ -21,7 +21,7 @@
   <body>
     <!-- header -->
     <nav class="navbar navbar-light bg-dark p-2">
-      <a class="navbar" href="/">
+      <a class="navbar-brand text-white" href="/">
         <img
           src="images/bike-logo.svg"
           width="50"
@@ -41,9 +41,9 @@
           <li class="breadcrumb-item active fs-5" aria-current="page">Cart</li>
         </ol>
       </nav>
-      <h1>Votre panier</h1>
+      <h1>Your cart</h1>
       <% if (dataCartBike.length > 0 ) { %>
-      <table class="table table-striped">
+      <table class="table table-striped table-responsive">
         <thead>
           <tr>
             <th scope="col">#</th>
@@ -65,8 +65,8 @@
             <td><%= dataCartBike[i].name %></td>
             <td>
               <form action="/update-shop" method="post">
-                <div class="input-group">
-                  <input type="number" name="quantity" value="<%= dataCartBike[i].quantity %>" min="1" max="<%= dataBike[dataBike.findIndex(el => el.name === dataCartBike[i].name)].stock + dataCartBike[i].quantity %>" step="1" />
+                <div class="input-group input-group-sm">
+                  <input class="form-control w-25" type="number" name="quantity" value="<%= dataCartBike[i].quantity %>" min="1" max="<%= dataBike[dataBike.findIndex(el => el.name === dataCartBike[i].name)].stock + dataCartBike[i].quantity %>" step="1" />
                   <button type="submit" class="btn btn-dark"><i class="fas fa-sync"></i></button>
                 </div>
                 <input type="hidden" name="index" value="<%= i %>" />
@@ -80,7 +80,7 @@
             <% } else { %>
             <td><%= dataCartBike[i].price * dataCartBike[i].quantity %>€</td>
             <% } %>
-            <td><a href="/delete-shop?model=<%= dataCartBike[i].name%>" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a></td>
+            <td><a href="/delete-shop?model=<%= dataCartBike[i].name%>" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></a></td>
           </tr>
         <% } %>
           <tr>
@@ -88,10 +88,33 @@
             <td></td>
             <td></td>
             <td></td>
-            <td class="fs-5 fw-bold">Shipping rates</td>
+            <td class="fs-6 fw-bold">Apply coupon</td>
+            <td>
+              <form action="/apply-coupon" method="post">
+                <div class="input-group input-group-sm w-50 mb-3">
+                  <input type="text" class="form-control" name="couponCode"/>
+                  <button class="btn btn-dark" type="submit" id="button-addon1">Apply</button>
+                </div>
+              </form>
+              <% if (couponCode) { %>
+              <form action="/delete-coupon" method="post" id="deleteCouponForm">
+                <span class="badge bg-primary"><%= couponCode.code %> - <%= couponCode.value %>% <a href="#" class="text-white" id="deleteCoupon"><i class="fas fa-times"></i></a></span>
+              </form>
+              <% } %>
+            </td>
+            <td>
+              
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="fs-6 fw-bold">Shipping rates</td>
             <td>
               <form id="update-shipping" action="/update-shipping" method="post">
-                <select class="shippingMode form-select" name="shippingMode">
+                <select class="shippingMode form-select form-select-sm w-50" name="shippingMode">
                 <% 
                 let selected = "";
                 for (let mode of shippingModes) { 
@@ -111,7 +134,7 @@
           <td></td>
           <td class="fs-5 fw-bold">Total</td>
           <% if (hasDiscount) { %>
-          <td class="fs-5"><span><s><%= totalCart + shippingRates %>€</s></span> <%= totalCart - totalDiscount + shippingRates %>€ <span class="badge rounded-pill bg-info text-dark"><%= Math.round(totalDiscount * 100) / 100 %>€ discount</span></td>
+          <td class="fs-5"><span><s><%= Math.round((totalCart + totalDiscount + shippingRates)*100)/100 %>€</s></span> <%= totalCart + shippingRates %>€ <span class="badge rounded-pill bg-info text-dark"><%= Math.round(totalDiscount * 100) / 100 %>€ discount</span></td>
           <% } else { %>
           <td class="fs-5"><%= totalCart + shippingRates %>€</td>
           <% } %>
@@ -125,7 +148,7 @@
         </tbody>
       </table>
       <% } else { %>
-        <h2>Votre panier est vide !</h2>
+        <h4 class="text-muted">Your cart is empty</h4>
         <% } %>
     </div>
     <!-- scripts -->

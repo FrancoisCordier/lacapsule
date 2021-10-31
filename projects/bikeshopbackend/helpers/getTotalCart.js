@@ -1,4 +1,4 @@
-const getTotalCart = (dataCartBike, shippingMode) => {
+const getTotalCart = (dataCartBike, shippingMode, couponCode) => {
   if (dataCartBike.length === 0)
     return { totalCart: 0, totalCartReduc: 0, shippingRates: 0 };
 
@@ -17,8 +17,13 @@ const getTotalCart = (dataCartBike, shippingMode) => {
     }
   }
 
-  // totalCart += shippingRates;
-  // totalCartReduc += shippingRates;
+  totalCart -= totalDiscount;
+
+  if (couponCode) {
+    if (couponCode.type === "percent") {
+      totalCart = totalCart - (couponCode.value * totalCart) / 100;
+    }
+  }
 
   return { totalCart, totalDiscount, hasDiscount, shippingRates };
 };

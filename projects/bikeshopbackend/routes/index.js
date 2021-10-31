@@ -8,6 +8,11 @@ const getTotalCart = require("../helpers/getTotalCart");
 
 const DOMAIN = "http://localhost:3000";
 
+const couponCodes = [
+  { code: "REDUC25", type: "percent", value: 25 },
+  { code: "REDUC50", type: "percent", value: 50 },
+  { code: "FIRSTTIME", type: "fixed", value: 100 },
+];
 const dataBike = [
   {
     name: "BIKO45",
@@ -64,7 +69,6 @@ router.get("/", function (req, res, next) {
     req.session.dataCartBike = [];
   }
 
-  console.log("INDEX SESSION", req.session);
   res.render("index", { dataBike, dataCartBike: req.session.dataCartBike });
 });
 
@@ -74,17 +78,22 @@ router.get("/shop", function (req, res, next) {
   if (req.session.shippingSelected == undefined) {
     req.session.shippingSelected = shippingModes[0];
   }
-  console.log("SHOP SESSION", req.session);
+
+  // if (!req.session.couponCode) {
+  //   req.session.couponCode = {};
+  // }
+
   req.session.shippingSelected = shippingModes.find(
     (el) => el.name === req.session.shippingSelected.name
   );
 
   const totalOrder = getTotalCart(
     req.session.dataCartBike,
-    req.session.shippingSelected
+    req.session.shippingSelected,
+    req.session.couponCode
   );
 
-  console.log("SHOP SESSION", req.session);
+  console.log(totalOrder);
 
   res.render("shop", {
     dataCartBike: req.session.dataCartBike,
@@ -94,6 +103,7 @@ router.get("/shop", function (req, res, next) {
     totalDiscount: totalOrder.totalDiscount,
     shippingRates: totalOrder.shippingRates,
     hasDiscount: totalOrder.hasDiscount,
+    couponCode: req.session.couponCode,
     dataBike,
   });
 });
@@ -174,39 +184,88 @@ router.post("/update-shipping", function (req, res) {
   res.redirect("shop");
 });
 
+router.post("/apply-coupon", function (req, res) {
+  const couponCode = req.body.couponCode;
+  const couponExists = couponCodes.find((el) => el.code === couponCode);
+
+  if (couponExists) {
+    req.session.couponCode = couponExists;
+    res.redirect("/shop");
+  } else {
+    res.redirect("/shop");
+  }
+});
+
+router.post("/delete-coupon", function (req, res) {
+  delete req.session.couponCode;
+  res.redirect("/shop");
+});
+
 router.post("/create-checkout-session", async (req, res) => {
   const myCart = req.session.dataCartBike;
   const stripeCart = [];
   const shippingRates = req.session.shippingSelected.value;
+  const couponCode = req.session.couponCode;
+  console.log(req.session);
 
   for (let item of myCart) {
-    if (item.quantity >= 2) {
-      stripeCart.push({
-        price_data: {
-          currency: "eur",
-          product_data: {
-            name: item.name,
+    if (couponCode && couponCode.type === "percent") {
+      if (item.quantity >= 2) {
+        stripeCart.push({
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: item.name,
+            },
+            unit_amount: Math.round(
+              (item.price - (0.2 * item.price) / item.quantity) *
+                100 *
+                (1 - couponCode.value / 100)
+            ),
           },
-          unit_amount: Math.round(
-            (item.price - (0.2 * item.price) / item.quantity) * 100
-          ),
-        },
-        quantity: item.quantity,
-      });
+          quantity: item.quantity,
+        });
+      } else {
+        stripeCart.push({
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: item.name,
+            },
+            unit_amount: item.price * 100 * (1 - couponCode.value / 100),
+          },
+          quantity: item.quantity,
+        });
+      }
     } else {
-      stripeCart.push({
-        price_data: {
-          currency: "eur",
-          product_data: {
-            name: item.name,
+      if (item.quantity >= 2) {
+        stripeCart.push({
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: item.name,
+            },
+            unit_amount: Math.round(
+              (item.price - (0.2 * item.price) / item.quantity) * 100
+            ),
           },
-          unit_amount: item.price * 100,
-        },
-        quantity: item.quantity,
-      });
+          quantity: item.quantity,
+        });
+      } else {
+        stripeCart.push({
+          price_data: {
+            currency: "eur",
+            product_data: {
+              name: item.name,
+            },
+            unit_amount: item.price * 100,
+          },
+          quantity: item.quantity,
+        });
+      }
     }
   }
-  console.log(stripeCart);
+
   stripeCart.push({
     price_data: {
       currency: "eur",
