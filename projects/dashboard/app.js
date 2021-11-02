@@ -11,6 +11,10 @@ require("./models/db");
 
 var app = express();
 
+app.locals.formatDate = function (date) {
+  console.log(`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`);
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+};
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
