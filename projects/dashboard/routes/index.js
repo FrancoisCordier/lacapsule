@@ -55,8 +55,82 @@ router.get("/order-page", async function (req, res, next) {
 });
 
 /* GET chart page. */
-router.get("/charts", function (req, res, next) {
-  res.render("charts");
+router.get("/charts", async function (req, res, next) {
+  // Utilisateurs par genre
+  const usersPerGender = await userModel.aggregate([
+    {
+      $group: {
+        _id: "$gender",
+        userCount: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const femaleCount = usersPerGender.find(
+    (el) => el._id === "female"
+  ).userCount;
+
+  const maleCount = usersPerGender.find((el) => el._id === "male").userCount;
+
+  // Messages par statut (lu, non lu)
+  const messagesReadUnread = await userModel.aggregate([
+    { $match: { status: "admin" } },
+    {
+      $unwind: "$messages",
+    },
+    {
+      $group: {
+        _id: "$messages.read",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const readCount = messagesReadUnread.find((el) => el._id === true).count;
+  const unreadCount = messagesReadUnread.find((el) => el._id === false).count;
+
+  // Statut d'expédition pour les commandes payées (expédiées, non expédiées)
+  const shippingStatus = await orderModel.aggregate([
+    { $match: { status_payment: "validated" } },
+    {
+      $group: {
+        _id: "$status_shipment",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const shippedOrderCount = shippingStatus.find((el) => el._id === true).count;
+  const notShippedOrderCount = shippingStatus.find(
+    (el) => el._id === false
+  ).count;
+
+  // Chiffre d'affaires
+  const revenues = await orderModel.aggregate([
+    { $match: { status_payment: "validated" } },
+    {
+      $group: {
+        _id: {
+          month: { $month: "$date_payment" },
+        },
+        total: { $sum: "$total" },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
+
+  console.log(revenues);
+  res.render("charts", {
+    femaleCount,
+    maleCount,
+    readCount,
+    unreadCount,
+    shippedOrderCount,
+    notShippedOrderCount,
+    revenues,
+  });
 });
 
 module.exports = router;
