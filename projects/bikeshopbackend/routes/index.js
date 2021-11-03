@@ -13,6 +13,7 @@ const couponCodes = [
   { code: "REDUC50", type: "percent", value: 50 },
   { code: "FIRSTTIME", type: "fixed", value: 100 },
 ];
+
 const dataBike = [
   {
     name: "BIKO45",

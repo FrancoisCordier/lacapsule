@@ -96,15 +96,15 @@
                   <button class="btn btn-dark" type="submit" id="button-addon1">Apply</button>
                 </div>
               </form>
-              <% if (couponCode) { %>
+              <% if (couponCode) {
+                let symbol = couponCode.type === "percent" ? "%" : "€";  
+              %>
               <form action="/delete-coupon" method="post" id="deleteCouponForm">
-                <span class="badge bg-primary"><%= couponCode.code %> - <%= couponCode.value %>% <a href="#" class="text-white" id="deleteCoupon"><i class="fas fa-times"></i></a></span>
+                <span class="badge bg-primary"><%= couponCode.code %> (-<%= couponCode.value %><%= symbol %>) <a href="#" class="text-white" id="deleteCoupon"><i class="fas fa-times"></i></a></span>
               </form>
               <% } %>
             </td>
-            <td>
-              
-            </td>
+            <td></td>
           </tr>
           <tr>
             <td></td>
@@ -125,16 +125,26 @@
                 </select>
               </form>
             </td>
-            <td class="fs-5"></td>
+            <td></td>
           </tr>
         <tfoot>
           <td></td>
           <td></td>
           <td></td>
           <td></td>
-          <td class="fs-5 fw-bold">Total</td>
+          <td class="fs-5 fw-bold">Total <span class="small">(with shipping)</span></td>
           <% if (hasDiscount) { %>
-          <td class="fs-5"><span><s><%= Math.round((totalCart + totalDiscount + shippingRates)*100)/100 %>€</s></span> <%= totalCart + shippingRates %>€ <span class="badge rounded-pill bg-info text-dark"><%= Math.round(totalDiscount * 100) / 100 %>€ discount</span></td>
+          <td class="fs-5">
+            <span>
+              <s>
+                <%= Math.round((totalCart + totalDiscount + shippingRates) * 100) / 100 %>€
+              </s>
+            </span> 
+            <%= totalCart + shippingRates %>€ 
+            <span class="badge rounded-pill bg-info text-dark">
+              <%= Math.round(totalDiscount * 100) / 100 %>€ discount
+            </span>
+          </td>
           <% } else { %>
           <td class="fs-5"><%= totalCart + shippingRates %>€</td>
           <% } %>

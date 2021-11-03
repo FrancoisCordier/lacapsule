@@ -22,6 +22,9 @@ const getTotalCart = (dataCartBike, shippingMode, couponCode) => {
   if (couponCode) {
     if (couponCode.type === "percent") {
       totalCart = totalCart - (couponCode.value * totalCart) / 100;
+      console.log(totalCart);
+    } else if (couponCode.type === "fixed") {
+      totalCart = totalCart - couponCode.value;
     }
   }
 
