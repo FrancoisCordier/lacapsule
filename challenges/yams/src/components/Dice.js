@@ -9,66 +9,62 @@ import {
   faDiceSix,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Dice = (props) => {
+const Dice = ({ value, rollCounter }) => {
+  // const randomDiceNumber = () => {
+  //   return Math.floor(Math.random() * 6) + 1;
+  // };
+
+  // const onDiceClick = () => {
+  //   setDiceNumber(randomDiceNumber());
+  //   setDiceChangeCounter(diceChangeCounter + 1);
+  // };
   const fontSize = "150px";
   let dice;
-  switch (props.number) {
-    case 1:
-      dice = (
+
+  const diceCreator = (faDice) => {
+    return (
+      <div className="col d-flex flex-column align-items-center me-2">
         <FontAwesomeIcon
-          icon={faDiceOne}
+          icon={faDice}
           style={{ fontSize: fontSize }}
-          className="me-3"
+          // onClick={() => {
+          //   onDiceClick();
+          // }}
         />
-      );
+        <h2>
+          <span className="badge" style={{ backgroundColor: "#023047" }}>
+            {rollCounter}
+          </span>
+        </h2>
+      </div>
+    );
+  };
+
+  switch (value) {
+    case 1:
+      dice = diceCreator(faDiceOne);
       break;
     case 2:
-      dice = (
-        <FontAwesomeIcon
-          icon={faDiceTwo}
-          style={{ fontSize: fontSize }}
-          className="me-3"
-        />
-      );
+      dice = diceCreator(faDiceTwo);
       break;
     case 3:
-      dice = (
-        <FontAwesomeIcon
-          icon={faDiceThree}
-          style={{ fontSize: fontSize }}
-          className="me-3"
-        />
-      );
+      dice = diceCreator(faDiceThree);
       break;
     case 4:
-      dice = (
-        <FontAwesomeIcon
-          icon={faDiceFour}
-          style={{ fontSize: fontSize }}
-          className="me-3"
-        />
-      );
+      dice = diceCreator(faDiceFour);
       break;
     case 5:
-      dice = (
-        <FontAwesomeIcon
-          icon={faDiceFive}
-          style={{ fontSize: fontSize }}
-          className="me-3"
-        />
-      );
+      dice = diceCreator(faDiceFive);
       break;
     case 6:
-      dice = (
-        <FontAwesomeIcon
-          icon={faDiceSix}
-          style={{ fontSize: fontSize }}
-          className="me-3"
-        />
-      );
+      dice = diceCreator(faDiceSix);
+      break;
+    default:
+      dice = "ERROR";
       break;
   }
   return dice;
 };
 
+// export { randomDiceNumber };
 export default Dice;

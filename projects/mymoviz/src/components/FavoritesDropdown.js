@@ -1,28 +1,68 @@
-import React, { useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Collapse, Card, CardBody } from "reactstrap";
+import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
+// import { Button, Offcanvas, OffcanvasHeader, OffcanvasBody } from "reactstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-const FavoriteMovies = () => {
+const FavoriteMovies = ({
+  favoriteMoviesCount,
+  favoriteMovies,
+  removeMovieFromFavorite,
+}) => {
+  const favoriteMoviesList = favoriteMovies.map((el, index) => {
+    return (
+      <div className="card mb-3" key={index}>
+        <div className="row g-0 d-flex align-items-center">
+          <div className="col-md-4">
+            <img src={el.img} className="img-fluid rounded-start" alt="..." />
+          </div>
+          <div className="col-md-7">
+            <div className="card-body">
+              <h5 className="card-title m-0">{el.name}</h5>
+            </div>
+          </div>
+          <div className="col-md-1">
+            <FontAwesomeIcon
+              className="text-danger"
+              icon={faTrash}
+              style={{ cursor: "pointer" }}
+              onClick={() => removeMovieFromFavorite(el.name)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  });
+
   return (
     <>
-      <Button
-        color="primary"
-        onClick={function noRefCheck() {}}
-        style={{
-          marginBottom: "1rem",
-        }}
+      <button
+        className="btn btn-danger fw-bold"
+        type="button"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasRight"
+        aria-controls="offcanvasRight"
       >
-        Toggle
-      </Button>
-      <Collapse>
-        <Card>
-          <CardBody>
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
-            terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
-            labore wes anderson cred nesciunt sapiente ea proident.
-          </CardBody>
-        </Card>
-      </Collapse>
+        <FontAwesomeIcon icon={faHeart} /> {favoriteMoviesCount}
+      </button>
+
+      <div
+        className="offcanvas offcanvas-end"
+        tabIndex="-1"
+        id="offcanvasRight"
+        aria-labelledby="offcanvasRightLabel"
+      >
+        <div className="offcanvas-header">
+          <h5 id="offcanvasRightLabel">Mes films favoris</h5>
+          <button
+            type="button"
+            className="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div className="offcanvas-body">{favoriteMoviesList}</div>
+      </div>
     </>
   );
 };
