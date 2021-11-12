@@ -9,35 +9,52 @@ import {
   faDiceSix,
 } from "@fortawesome/free-solid-svg-icons";
 
-const Dice = ({ value, rollCounter }) => {
-  // const randomDiceNumber = () => {
-  //   return Math.floor(Math.random() * 6) + 1;
-  // };
-
-  // const onDiceClick = () => {
-  //   setDiceNumber(randomDiceNumber());
-  //   setDiceChangeCounter(diceChangeCounter + 1);
-  // };
+const Dice = ({
+  value,
+  diceRollCounter,
+  selectDice,
+  isSelected,
+  diceIndex,
+}) => {
   const fontSize = "150px";
   let dice;
 
   const diceCreator = (faDice) => {
-    return (
-      <div className="col d-flex flex-column align-items-center me-2">
-        <FontAwesomeIcon
-          icon={faDice}
-          style={{ fontSize: fontSize }}
-          // onClick={() => {
-          //   onDiceClick();
-          // }}
-        />
-        <h2>
-          <span className="badge" style={{ backgroundColor: "#023047" }}>
-            {rollCounter}
-          </span>
-        </h2>
-      </div>
-    );
+    if (!isSelected) {
+      return (
+        <div className="col d-flex flex-column align-items-center me-2">
+          <FontAwesomeIcon
+            icon={faDice}
+            style={{ fontSize: fontSize }}
+            onClick={() => {
+              selectDice(diceIndex);
+            }}
+          />
+          <h2>
+            <span className="badge" style={{ backgroundColor: "#023047" }}>
+              {diceRollCounter}
+            </span>
+          </h2>
+        </div>
+      );
+    } else {
+      return (
+        <div className="col d-flex flex-column align-items-center me-2 border border-dark border-3">
+          <FontAwesomeIcon
+            icon={faDice}
+            style={{ fontSize: fontSize }}
+            onClick={() => {
+              selectDice(diceIndex);
+            }}
+          />
+          <h2>
+            <span className="badge" style={{ backgroundColor: "#023047" }}>
+              {diceRollCounter}
+            </span>
+          </h2>
+        </div>
+      );
+    }
   };
 
   switch (value) {
@@ -66,5 +83,4 @@ const Dice = ({ value, rollCounter }) => {
   return dice;
 };
 
-// export { randomDiceNumber };
 export default Dice;
