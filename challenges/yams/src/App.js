@@ -74,6 +74,11 @@ function App() {
           <Button color="danger" size="lg" onClick={() => randomDices()}>
             Lancer les dés
           </Button>
+          <div className="row">
+            <div className="col">
+              <ScoreGrid />
+            </div>
+          </div>
         </div>
       </div>
     </div>
