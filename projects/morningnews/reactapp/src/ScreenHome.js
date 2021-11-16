@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Input, Button, Alert, Form } from "antd";
+import { Input, Button, Form } from "antd";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 
@@ -27,9 +27,7 @@ function ScreenHome() {
         password: password,
       })
       .then((response) => {
-        // console.log("RESPONSE", response);
         if (response.data.errors) {
-          console.log(response.data.errors);
           setErrorsSignUp(response.data.errors);
         } else {
           setIsLogged(true);
@@ -51,104 +49,109 @@ function ScreenHome() {
       });
   };
 
+  const handleErrorStatus = (field, errorArray) => {
+    return errorArray.length > 0 && errorArray.find((el) => el.param === field)
+      ? "error"
+      : "success";
+  };
+
+  const handleErrorMsg = (field, errorArray) => {
+    return errorArray.length > 0 && errorArray.find((el) => el.param === field)
+      ? errorArray.find((el) => el.param === field).msg
+      : "";
+  };
+
   return (
     <div className="Login-page">
       {/* SIGN-IN */}
       {isLogged ? <Redirect to="/screensource" /> : null}
       <div className="Sign">
-        <Input
-          className="Login-input"
-          placeholder="youremail@lsomething.com"
-          onChange={(e) => setEmailSignIn(e.target.value)}
-          value={emailSignIn}
-        />
-        {errorsSignIn.length > 0 &&
-        errorsSignIn.find((el) => el.param === "email") ? (
-          <Alert
-            message={errorsSignIn.find((el) => el.param === "email").msg}
-            type="error"
-            showIcon
-          />
-        ) : null}
-        <Input.Password
-          className="Login-input"
-          placeholder="Password"
-          onChange={(e) => setPasswordSignIn(e.target.value)}
-          value={passwordSignIn}
-        />
-        {errorsSignIn.length > 0 &&
-        errorsSignIn.find((el) => el.param === "password") ? (
-          <Alert
-            message={errorsSignIn.find((el) => el.param === "password").msg}
-            type="error"
-            showIcon
-          />
-        ) : null}
-        <Button
-          style={{ width: "80px" }}
-          type="primary"
-          onClick={() => submitSignIn(emailSignIn, passwordSignIn)}
-        >
-          Sign-in
-        </Button>
+        <Form>
+          <Form.Item
+            validateStatus={handleErrorStatus("email", errorsSignIn)}
+            help={handleErrorMsg("email", errorsSignIn)}
+            className="Login-input"
+          >
+            <Input
+              placeholder="youremail@lsomething.com"
+              onChange={(e) => setEmailSignIn(e.target.value)}
+              value={emailSignIn}
+            />
+          </Form.Item>
+          <Form.Item
+            validateStatus={handleErrorStatus("password", errorsSignIn)}
+            help={handleErrorMsg("password", errorsSignIn)}
+            className="Login-input"
+          >
+            <Input.Password
+              placeholder="Password"
+              onChange={(e) => setPasswordSignIn(e.target.value)}
+              value={passwordSignIn}
+            />
+          </Form.Item>
+          <Form.Item className="Login-input">
+            <Button
+              style={{ width: "80px" }}
+              type="primary"
+              onClick={() => submitSignIn(emailSignIn, passwordSignIn)}
+            >
+              Sign-in
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
 
       {/* SIGN-UP */}
 
       <div className="Sign">
-        <Input
-          className="Login-input"
-          placeholder="User name"
-          onChange={(e) => setUserName(e.target.value)}
-          value={userName}
-          name="userName"
-        />
+        <Form>
+          <Form.Item
+            validateStatus={handleErrorStatus("userName", errorsSignUp)}
+            help={handleErrorMsg("userName", errorsSignUp)}
+            className="Login-input"
+          >
+            <Input
+              placeholder="User name"
+              onChange={(e) => setUserName(e.target.value)}
+              value={userName}
+              name="userName"
+            />
+          </Form.Item>
+          <Form.Item
+            validateStatus={handleErrorStatus("email", errorsSignUp)}
+            help={handleErrorMsg("email", errorsSignUp)}
+            className="Login-input"
+          >
+            <Input
+              placeholder="E-mail"
+              onChange={(e) => setUserEmail(e.target.value)}
+              value={userEmail}
+              name="email"
+            />
+          </Form.Item>
 
-        {errorsSignUp.length > 0 &&
-        errorsSignUp.find((el) => el.param === "userName") ? (
-          <Alert
-            message={errorsSignUp.find((el) => el.param === "userName").msg}
-            type="error"
-            showIcon
-          />
-        ) : null}
-        <Input
-          className="Login-input"
-          placeholder="E-mail"
-          onChange={(e) => setUserEmail(e.target.value)}
-          value={userEmail}
-          name="email"
-        />
-        {errorsSignUp.length > 0 &&
-        errorsSignUp.find((el) => el.param === "email") ? (
-          <Alert
-            message={errorsSignUp.find((el) => el.param === "email").msg}
-            type="error"
-            showIcon
-          />
-        ) : null}
-        <Input.Password
-          className="Login-input"
-          placeholder="Password"
-          onChange={(e) => setUserPassword(e.target.value)}
-          value={userPassword}
-          name="password"
-        />
-        {errorsSignUp.length > 0 &&
-        errorsSignUp.find((el) => el.param === "password") ? (
-          <Alert
-            message={errorsSignUp.find((el) => el.param === "password").msg}
-            type="error"
-            showIcon
-          />
-        ) : null}
-        <Button
-          style={{ width: "80px" }}
-          type="primary"
-          onClick={() => submitSignUp(userName, userEmail, userPassword)}
-        >
-          Sign-up
-        </Button>
+          <Form.Item
+            validateStatus={handleErrorStatus("password", errorsSignUp)}
+            help={handleErrorMsg("password", errorsSignUp)}
+            className="Login-input"
+          >
+            <Input.Password
+              placeholder="Password"
+              onChange={(e) => setUserPassword(e.target.value)}
+              value={userPassword}
+              name="password"
+            />
+          </Form.Item>
+          <Form.Item className="Login-input">
+            <Button
+              style={{ width: "80px" }}
+              type="primary"
+              onClick={() => submitSignUp(userName, userEmail, userPassword)}
+            >
+              Sign-up
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

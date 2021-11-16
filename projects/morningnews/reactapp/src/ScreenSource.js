@@ -24,9 +24,7 @@ function ScreenSource() {
   return (
     <div>
       <Nav />
-
       <div className="Banner" />
-
       <div className="HomeThemes">
         <List
           itemLayout="horizontal"

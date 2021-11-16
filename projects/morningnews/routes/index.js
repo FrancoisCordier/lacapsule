@@ -32,7 +32,7 @@ router.post(
   check("email").isEmail().withMessage("Please enter a valid email address"),
   async function (req, res) {
     const errors = validationResult(req);
-    console.log("ERRORS", errors);
+    console.log(errors);
     if (!errors.isEmpty()) {
       res.json(errors);
     } else {
@@ -82,4 +82,5 @@ router.post(
     }
   }
 );
+
 module.exports = router;
