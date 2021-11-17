@@ -3,7 +3,7 @@ import "./App.css";
 import { List, Avatar } from "antd";
 import Nav from "./Nav";
 import axios from "axios";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const newsAPI = axios.create({
   baseURL: "https://newsapi.org/v2/",
@@ -20,7 +20,6 @@ function ScreenSource() {
       .then((response) => setSourceList(response.data.sources));
   }, []);
 
-  console.log(sourceList);
   return (
     <div>
       <Nav />

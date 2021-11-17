@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { Card, Icon } from "antd";
+import { Card, Icon, Modal } from "antd";
 import Nav from "./Nav";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Modal } from "antd";
+import { connect } from "react-redux";
 
 const { Meta } = Card;
 
@@ -12,7 +12,7 @@ const newsAPI = axios.create({
   baseURL: "https://newsapi.org/v2/",
 });
 
-function ScreenArticlesBySource() {
+function ScreenArticlesBySource(props) {
   const [articleList, setArticleList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState({});
@@ -27,7 +27,7 @@ function ScreenArticlesBySource() {
         },
       })
       .then((response) => setArticleList(response.data.articles));
-  }, []);
+  }, [id]);
 
   const showModal = (article) => {
     setIsModalVisible(true);
@@ -42,7 +42,10 @@ function ScreenArticlesBySource() {
     setIsModalVisible(false);
   };
 
-  console.log(articleList, selectedArticle);
+  const isArticleFavorite = (article) => {
+    return props.favoriteArticles.some((el) => el.title === article.title);
+  };
+
   return (
     <div>
       <Nav />
@@ -79,7 +82,16 @@ function ScreenArticlesBySource() {
                     key="ellipsis2"
                     onClick={() => showModal(article)}
                   />,
-                  <Icon type="like" key="ellipsis" />,
+                  <Icon
+                    type="like"
+                    theme={isArticleFavorite(article) ? "twoTone" : "outlined"}
+                    key="ellipsis"
+                    onClick={() =>
+                      isArticleFavorite(article)
+                        ? props.removeFromFavorite(article.title)
+                        : props.addToFavorite(article)
+                    }
+                  />,
                 ]}
               >
                 <Meta title={article.title} description={article.description} />
@@ -100,4 +112,23 @@ function ScreenArticlesBySource() {
   );
 }
 
-export default ScreenArticlesBySource;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToFavorite: function (article) {
+      dispatch({ type: "addArticle", article });
+    },
+    removeFromFavorite: function (title) {
+      dispatch({ type: "removeArticle", title });
+    },
+  };
+};
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return { favoriteArticles: state.favoriteArticles };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ScreenArticlesBySource);
