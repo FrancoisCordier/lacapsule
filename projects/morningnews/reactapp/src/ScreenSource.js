@@ -3,7 +3,7 @@ import "./App.css";
 import { List, Avatar } from "antd";
 import Nav from "./Nav";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 const newsAPI = axios.create({

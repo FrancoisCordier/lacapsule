@@ -20,15 +20,16 @@ function ScreenArticlesBySource(props) {
   console.log("USER TOKEN", props.token);
   useEffect(() => {
     newsAPI
-      .get("/everything", {
+      .get("/top-headlines", {
         params: {
           apiKey: "f349b8c728944e15b3bf505ea1ec4cea",
           sources: id,
         },
       })
       .then((response) => setArticleList(response.data.articles));
-  }, [id]);
+  }, []);
 
+  console.log(id);
   const showModal = (article) => {
     setIsModalVisible(true);
     setSelectedArticle(article);
