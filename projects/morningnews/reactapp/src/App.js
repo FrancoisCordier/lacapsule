@@ -6,10 +6,11 @@ import ScreenArticlesBySource from "./ScreenArticlesBySource";
 import ScreenMyArticles from "./ScreenMyArticles";
 import ScreenSource from "./ScreenSource";
 import favoriteArticles from "./reducers/article";
+import token from "./reducers/token";
 import { Provider } from "react-redux";
 import { createStore, combineReducers } from "redux";
 
-const store = createStore(combineReducers({ favoriteArticles }));
+const store = createStore(combineReducers({ favoriteArticles, token }));
 
 function App() {
   return (

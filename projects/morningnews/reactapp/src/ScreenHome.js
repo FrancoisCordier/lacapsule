@@ -3,12 +3,13 @@ import "./App.css";
 import { Input, Button, Form } from "antd";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import { connect } from "react-redux";
 
 const morningNewsAPI = axios.create({
   baseURL: "http://localhost:3000/",
 });
 
-function ScreenHome() {
+function ScreenHome(props) {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -31,6 +32,7 @@ function ScreenHome() {
           setErrorsSignUp(response.data.errors);
         } else {
           setIsLogged(true);
+          props.addToken(response.data.token);
         }
       });
   };
@@ -45,7 +47,10 @@ function ScreenHome() {
         if (response.data.errors) {
           setErrorsSignIn(response.data.errors);
         }
-        if (response.data.userExists) setIsLogged(true);
+        if (response.data.userExists) {
+          setIsLogged(true);
+          props.addToken(response.data.token);
+        }
       });
   };
 
@@ -156,6 +161,13 @@ function ScreenHome() {
     </div>
   );
 }
-// }
 
-export default ScreenHome;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addToken: function (token) {
+      dispatch({ type: "addToken", token: token });
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ScreenHome);

@@ -17,7 +17,7 @@ function ScreenArticlesBySource(props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState({});
   const { id } = useParams();
-
+  console.log("USER TOKEN", props.token);
   useEffect(() => {
     newsAPI
       .get("/everything", {
@@ -124,8 +124,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
-  return { favoriteArticles: state.favoriteArticles };
+  return { favoriteArticles: state.favoriteArticles, token: state.token };
 };
 
 export default connect(
