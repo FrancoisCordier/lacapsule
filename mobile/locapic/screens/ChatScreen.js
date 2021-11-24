@@ -17,7 +17,7 @@ const list = [
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffff",
+    // backgroundColor: "#ffff",
     marginTop: 50,
     // alignItems: "center",
     // justifyContent: "center",

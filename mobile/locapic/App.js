@@ -6,12 +6,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Provider } from "react-redux";
 import { createStore, combineReducers } from "redux";
 import pseudo from "./reducers/pseudo.reducer";
+import pointOfInterests from "./reducers/poi.reducer";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ChatScreen from "./screens/ChatScreen";
 import HomeScreen from "./screens/HomeScreen";
 import MapScreen from "./screens/MapScreen";
+import POIScreen from "./screens/POIScreen";
 
-const store = createStore(combineReducers({ pseudo }));
+const store = createStore(combineReducers({ pseudo, pointOfInterests }));
 
 const styles = StyleSheet.create({
   container: {
@@ -36,6 +38,8 @@ const TabNav = () => {
             iconName = focused ? "ios-navigate" : "ios-navigate-outline";
           } else if (route.name === "Chat") {
             iconName = focused ? "ios-chatbubbles" : "ios-chatbubbles-outline";
+          } else if (route.name === "PointOfInterests") {
+            iconName = focused ? "ios-flag" : "ios-flag-outline";
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -52,6 +56,11 @@ const TabNav = () => {
       <Tab.Screen
         name="Chat"
         component={ChatScreen}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="PointOfInterests"
+        component={POIScreen}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
