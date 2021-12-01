@@ -1,7 +1,11 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 // import Icon from "react-native-vector-icons/FontAwesome";
-import { ListItem, Button, Input, Avatar, Icon } from "react-native-elements";
+import { ListItem, Button, Input, Icon } from "react-native-elements";
+import { io } from "socket.io-client";
+import { connect } from "react-redux";
+
+const socket = io("http://192.168.1.65:3000");
 
 const list = [
   {
@@ -27,30 +31,62 @@ const styles = StyleSheet.create({
   },
 });
 
-const ChatScreen = () => {
+const ChatScreen = (props) => {
+  const [currentMessage, setCurrentMessage] = useState({
+    user: props.state.pseudo,
+    content: "",
+  });
+  const [listMessages, setListMessages] = useState([]);
+
+  const sendMessage = () => {
+    socket.emit("sendMessage", currentMessage);
+    setCurrentMessage("");
+  };
+
+  useEffect(() => {
+    const listener = (message) => {
+      setListMessages([...listMessages, message]);
+    };
+    socket.on("sendMessageToAll", listener);
+    console.log(listMessages);
+    return () => socket.off("sendMessageToAll", listener);
+  }, [listMessages]);
+
   return (
     <View style={styles.container}>
       <View style={styles.chat}>
-        {list.map((item, i) => (
-          <ListItem key={i} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{item.title}</ListItem.Title>
-              <ListItem.Subtitle>{item.author}</ListItem.Subtitle>
-            </ListItem.Content>
-          </ListItem>
-        ))}
+        <ScrollView>
+          {listMessages.map((item, i) => (
+            <ListItem key={i} bottomDivider>
+              <ListItem.Content>
+                <ListItem.Title>{item.content}</ListItem.Title>
+                <ListItem.Subtitle>{item.user}</ListItem.Subtitle>
+              </ListItem.Content>
+            </ListItem>
+          ))}
+        </ScrollView>
       </View>
       <View>
-        <Input placeholder="Your message" />
+        <Input
+          placeholder="Your message"
+          value={currentMessage.content}
+          onChangeText={(message) =>
+            setCurrentMessage({ user: props.state.pseudo, content: message })
+          }
+        />
         <Button
           icon={
             <Icon type="ionicon" name="mail-outline" size={15} color="white" />
           }
           title="Send"
+          onPress={() => sendMessage()}
         />
       </View>
     </View>
   );
 };
 
-export default ChatScreen;
+const mapStateToProps = (state) => {
+  return { state };
+};
+export default connect(mapStateToProps, null)(ChatScreen);

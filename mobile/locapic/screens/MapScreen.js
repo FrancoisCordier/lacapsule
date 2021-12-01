@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Button } from "react-native";
-import { Overlay, Text, Input, Divider } from "react-native-elements";
+import { Overlay, Text, Input } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { connect } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { io } from "socket.io-client";
+
+const socket = io("http://192.168.1.65:3000");
 
 const styles = StyleSheet.create({
   container: {
@@ -20,31 +24,48 @@ const styles = StyleSheet.create({
 });
 
 const MapScreen = (props) => {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  // const [locations, setLocations] = useState();
   const [addPOI, setAddPOI] = useState(false);
-  const [listPOI, setListPOI] = useState([]);
   const [userPin, setUserPin] = useState(null);
   const [dataPOI, setDataPOI] = useState({ name: "", description: "" });
   const [visible, setVisible] = useState(false);
+  const [usersLocations, setUsersLocations] = useState([]);
 
-  console.log(props.state);
+  useEffect(() => {
+    askPermissions();
+    getPointOfInterests();
+  }, []);
+
+  useEffect(() => {
+    storePointOfInterest();
+  }, [props.state.pointOfInterests]);
+
+  useEffect(() => {
+    const listener = (usersLocations) => {
+      setUsersLocations(usersLocations);
+    };
+    socket.on("sendLocationToAll", listener);
+    return () => socket.off("sendLocationToAll", listener);
+  }, [usersLocations]);
+
+  console.log(usersLocations);
+
+  const askPermissions = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === "granted") {
+      Location.watchPositionAsync({ distanceInterval: 10 }, (location) => {
+        socket.emit("sendLocation", {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+          pseudo: props.state.pseudo,
+        });
+      });
+    }
+  };
 
   const toggleOverlay = () => {
     setVisible(!visible);
   };
-
-  useEffect(() => {
-    async function askPermissions() {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === "granted") {
-        Location.watchPositionAsync({ distanceInterval: 10 }, (location) => {
-          setLocation(location);
-        });
-      }
-    }
-    askPermissions();
-  }, []);
 
   const addPointOfInterest = () => {
     props.addPOI({
@@ -54,28 +75,34 @@ const MapScreen = (props) => {
       description: dataPOI.description,
     });
 
-    setListPOI([
-      ...listPOI,
-      {
-        latitude: userPin.latitude,
-        longitude: userPin.longitude,
-        name: dataPOI.name,
-        description: dataPOI.description,
-      },
-    ]);
     setAddPOI(false);
     setDataPOI({ name: "", description: "" });
     setUserPin(null);
     toggleOverlay();
-    console.log(listPOI);
   };
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
+  const storePointOfInterest = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "pointOfInterests",
+        JSON.stringify(props.state.pointOfInterests)
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getPointOfInterests = async () => {
+    try {
+      const data = await AsyncStorage.getItem("pointOfInterests");
+
+      if (data) {
+        props.state.pointOfInterests = JSON.parse(data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -96,16 +123,6 @@ const MapScreen = (props) => {
           });
         }}
       >
-        {location ? (
-          <Marker
-            title="Hello"
-            description="I am here"
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-          />
-        ) : null}
         {props.state.pointOfInterests.map((el, index) => {
           return (
             <Marker
@@ -120,6 +137,22 @@ const MapScreen = (props) => {
             />
           );
         })}
+
+        {usersLocations.map((location, index) => {
+          return (
+            <Marker
+              // pinColor="red"
+              key={index}
+              title={location.pseudo}
+              description="I am here"
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+            />
+          );
+        })}
+
         {userPin ? (
           <Marker
             pinColor="red"
@@ -141,14 +174,12 @@ const MapScreen = (props) => {
             label="Name"
             onChangeText={(name) => {
               setDataPOI({ name: name, description: dataPOI.description });
-              console.log(dataPOI);
             }}
           />
           <Input
             label="Description"
             onChangeText={(description) => {
               setDataPOI({ name: dataPOI.name, description: description });
-              console.log(dataPOI);
             }}
           />
           <Button

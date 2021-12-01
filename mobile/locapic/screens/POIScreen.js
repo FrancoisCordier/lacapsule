@@ -4,7 +4,6 @@ import { ListItem, Button, Input, Avatar, Icon } from "react-native-elements";
 import { connect } from "react-redux";
 
 const POIScreen = (props) => {
-  console.log(props.pointOfInterests);
   return (
     <View style={{ marginTop: 50 }}>
       {props.pointOfInterests.map((el, index) => {

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, ImageBackground } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Input, Button } from "react-native-elements";
+import { Input, Button, Text } from "react-native-elements";
 import { connect } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,34 +23,67 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "blue",
-    padding: 10,
+
+    marginTop: 30,
     alignItems: "center",
-    width: "50%",
+    // width: "50%",
     borderRadius: 5,
   },
 });
 
 const HomeScreen = (props) => {
   const [pseudo, setPseudo] = useState("");
-  console.log(pseudo);
+
+  useEffect(() => {
+    getPseudo();
+  }, []);
+
+  const storePseudo = async (pseudo) => {
+    try {
+      await AsyncStorage.setItem("pseudo", pseudo);
+      props.setPseudo(pseudo);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getPseudo = async () => {
+    try {
+      const pseudo = await AsyncStorage.getItem("pseudo");
+      if (pseudo) {
+        setPseudo(pseudo);
+        props.setPseudo(pseudo);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground source={require("./home.jpg")} style={styles.image}>
-        <Input
-          containerStyle={{ width: "75%" }}
-          inputContainerStyle={{ borderColor: "red" }}
-          inputStyle={{ color: "black" }}
-          placeholder="Username"
-          leftIcon={<Icon name="user" size={24} color="red" />}
-          onChangeText={(pseudo) => setPseudo(pseudo)}
-        />
+        {!props.state.pseudo ? (
+          <Input
+            containerStyle={{ width: "75%" }}
+            inputContainerStyle={{ borderColor: "red" }}
+            inputStyle={{ color: "black" }}
+            placeholder="Username"
+            leftIcon={<Icon name="user" size={24} color="red" />}
+            onChangeText={(pseudo) => setPseudo(pseudo)}
+          />
+        ) : (
+          <Text h4 h4Style={{ color: "white" }}>
+            Welcome back {pseudo} !
+          </Text>
+        )}
         <Button
           icon={<Icon name="arrow-right" size={15} color="red" />}
           title="Go to map"
           onPress={() => {
-            props.setPseudo(pseudo);
+            storePseudo(pseudo);
             props.navigation.navigate("TabNav");
           }}
+          buttonStyle={styles.button}
         />
       </ImageBackground>
     </View>
@@ -64,4 +98,8 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(HomeScreen);
+const mapStateToProps = (state) => {
+  return { state };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
