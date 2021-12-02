@@ -7,6 +7,11 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import SnapScreen from "./screens/SnapScreen";
 import GalleryScreen from "./screens/GalleryScreen";
+import { Provider } from "react-redux";
+import { createStore, combineReducers } from "redux";
+import photos from "./reducers/photos.reducer";
+
+const store = createStore(combineReducers({ photos }));
 
 // Define the config
 const config = {
@@ -58,22 +63,24 @@ const bottomNav = () => {
 
 export default function App() {
   return (
-    <NativeBaseProvider>
-      <StatusBar />
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="bottomNav"
-            component={bottomNav}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
+    <Provider store={store}>
+      <NativeBaseProvider>
+        <StatusBar />
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="bottomNav"
+              component={bottomNav}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </NativeBaseProvider>
+    </Provider>
   );
 }

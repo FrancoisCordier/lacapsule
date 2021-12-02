@@ -4,32 +4,21 @@ import {
   Heading,
   AspectRatio,
   Image,
-  Text,
-  Center,
-  HStack,
   Stack,
   FlatList,
-  Container,
   Flex,
   Badge,
+  Text,
+  HStack,
 } from "native-base";
-import { Asset } from "expo-asset";
-import image01 from "../assets/picture-1.jpg";
-import image02 from "../assets/picture-2.jpg";
-import image03 from "../assets/picture-3.jpg";
-import image04 from "../assets/picture-4.jpg";
+import { connect } from "react-redux";
 
-const GalleryScreen = () => {
-  const data = [
-    { img: image01 },
-    { img: image02 },
-    { img: image03 },
-    { img: image04 },
-  ];
+const GalleryScreen = (props) => {
+  console.log("STATE", props.state);
 
   const cards = (
     <FlatList
-      data={data}
+      data={props.state.photos}
       renderItem={({ item }) => (
         <Box
           maxW="80"
@@ -54,7 +43,7 @@ const GalleryScreen = () => {
             <AspectRatio w="100%" ratio={16 / 9}>
               <Image
                 source={{
-                  uri: Asset.fromModule(item.img).uri,
+                  uri: item.photoURL,
                 }}
                 alt="image"
               />
@@ -66,15 +55,20 @@ const GalleryScreen = () => {
                 Tags determined by AI
               </Heading>
             </Stack>
-            <Flex direction="row" wrap="wrap">
-              <Badge colorScheme="success">SUCCESS</Badge>
-              <Badge colorScheme="success">SUCCESS</Badge>
-              <Badge colorScheme="success">SUCCESS</Badge>
-              <Badge colorScheme="success">SUCCESS</Badge>
-              <Badge colorScheme="success">SUCCESS</Badge>
-              <Badge colorScheme="success">SUCCESS</Badge>
-              <Badge colorScheme="success">SUCCESS</Badge>
-            </Flex>
+            <Box>
+              {item.detectionResults ? (
+                item.detectionResults.map((el, index) => {
+                  return (
+                    <Flex direction="row" wrap="wrap" key={index}>
+                      <Badge colorScheme="info">{`${el.age} y.o`}</Badge>
+                      <Badge colorScheme="info">{el.gender}</Badge>
+                    </Flex>
+                  );
+                })
+              ) : (
+                <Text>{item.detectionError}</Text>
+              )}
+            </Box>
           </Stack>
         </Box>
       )}
@@ -95,4 +89,8 @@ const GalleryScreen = () => {
   );
 };
 
-export default GalleryScreen;
+const mapStateToProps = (state) => {
+  return { state };
+};
+
+export default connect(mapStateToProps, null)(GalleryScreen);
